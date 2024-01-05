@@ -53,7 +53,7 @@ const resetPasswd = async (ctx, next) => {
         );
         await redis.redisCli.quit();
     
-        const verificationLink = `http://${cfg.url}/reset?token=${jwtToken}`;
+        const verificationLink = `http://${cfg.resetUrl}/reset?token=${jwtToken}`;
     
         const mailOptions = {
           from: "260484443@qq.com",

@@ -223,6 +223,13 @@ router.get("/verify/:token", async (ctx, next) => {
     await redis.redisCli.quit();
 
     const rsp = await UserInfoRpc.register(JSON.parse(data));
+    
+    if (rsp.code === 0) {
+        ctx.response.redirect("http://43.139.220.240:8089/success")
+    } else {
+        ctx.response.redirect("http://43.139.220.240:8089/failure")
+    }
+
   } catch (error) {
     console.error(error);
   }
