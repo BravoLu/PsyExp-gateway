@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const jwt = require("./jwt");
 const redis = require("./redis");
+const cfg = require("../config")
 
 const transporter = nodemailer.createTransport({
   service: "qq",
@@ -23,7 +24,7 @@ const preRegister = async (ctx, next) => {
     );
     await redis.redisCli.quit();
 
-    const verificationLink = `http://localhost:8080/verify/${jwtToken}`;
+    const verificationLink = `http://${cfg.url}/verify/${jwtToken}`;
 
     const mailOptions = {
       from: "260484443@qq.com",
@@ -52,7 +53,7 @@ const resetPasswd = async (ctx, next) => {
         );
         await redis.redisCli.quit();
     
-        const verificationLink = `http://localhost:5173/reset?token=${jwtToken}`;
+        const verificationLink = `http://${cfg.url}/reset?token=${jwtToken}`;
     
         const mailOptions = {
           from: "260484443@qq.com",

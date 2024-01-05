@@ -49,7 +49,7 @@ const queryExps = (req) => {
         resolve(response);
       } else {
         console.error(error);
-        reject(response);
+        reject(error);
       }
     });
   });
@@ -62,7 +62,7 @@ const updateExp = async (req) => {
         resolve(response);
       } else {
         console.error(error);
-        reject(response);
+        reject(error);
       }
     })
   })
@@ -74,7 +74,7 @@ const queryExp = (req) => {
       if (!error) {
         resolve(response);
       } else {
-        reject(response);
+        reject(error);
       }
     });
   });
@@ -86,7 +86,7 @@ const addSub = (req) => {
       if (!error) {
         resolve(response);
       } else {
-        reject(response);
+        reject(error);
       }
     });
   });
@@ -98,7 +98,7 @@ const updateSub = (req) => {
       if (!error) {
         resolve(response);
       } else {
-        reject(response);
+        reject(error);
       }
     });
   });
@@ -110,7 +110,7 @@ const querySubs = (req) => {
       if (!error) {
         resolve(response);
       } else {
-        reject(response);
+        reject(error);
       }
     });
   });
@@ -122,7 +122,7 @@ const querySub = (req) => {
       if (!error) {
         resolve(response);
       } else {
-        reject(response);
+        reject(error);
       }
     });
   });

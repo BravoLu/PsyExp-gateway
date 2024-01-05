@@ -32,10 +32,8 @@ router.post("/login", async (ctx, next) => {
     ctx.response.body = resp;
 
     if (resp.code === 0) {
-      console.log("ctx: ", resp.uid);
       ctx.append("Access-Control-Expose-Headers", "uid");
       ctx.append("uid", resp.uid);
-
       ctx.cookies.set("uid", resp.uid);
     }
   } catch (error) {}
@@ -55,8 +53,6 @@ router.get("/githubOAuth", async (ctx, next) => {
 
 router.get("/myprofile", async (ctx, next) => {
   try {
-    // console.log("cookies: ", ctx.cookies);
-
     const uid = ctx.cookies.get("uid");
 
     console.log("uid in cookie: ", uid);
@@ -107,6 +103,8 @@ router.get("/logout", async (ctx, next) => {
 
 router.post("/addExp", async (ctx, next) => {
   try {
+    ctx.request.body["rid"] = ctx.cookies.get("uid");
+
     const rsp = await ExpInfoRpc.addExp(ctx.request.body);
 
     ctx.response.body = rsp;
@@ -127,7 +125,6 @@ router.post("/updateExp", async (ctx, next) => {
 router.post("/queryExps", async (ctx, next) => {
   try {
     const rsp = await ExpInfoRpc.queryExps(ctx.request.body);
-
     ctx.response.body = rsp;
   } catch (error) {}
 
@@ -136,8 +133,9 @@ router.post("/queryExps", async (ctx, next) => {
 
 router.post("/queryExp", async (ctx, next) => {
   try {
+    console;
     const rsp = await ExpInfoRpc.queryExp(ctx.request.body);
-
+    console.log("queryExp: ", rsp);
     ctx.response.body = rsp;
   } catch (error) {}
 
@@ -146,6 +144,7 @@ router.post("/queryExp", async (ctx, next) => {
 
 router.post("/addSub", async (ctx, next) => {
   try {
+    ctx.request.body["pid"] = ctx.cookies.get("uid");
     const rsp = await ExpInfoRpc.addSub(ctx.request.body);
 
     ctx.response.body = rsp;
@@ -181,9 +180,9 @@ router.post("/querySubs", async (ctx, next) => {
 router.post("/querySub", async (ctx, next) => {
   try {
     if (ctx.request.body.pid === undefined) {
-      ctx.request.body.pid = Number(ctx.cookies.get("uid"))
+      ctx.request.body.pid = Number(ctx.cookies.get("uid"));
     }
-    console.log("request body: ", ctx.request.body)
+    console.log("request body: ", ctx.request.body);
     const rsp = await ExpInfoRpc.querySub(ctx.request.body);
     ctx.response.body = rsp;
   } catch (error) {}
@@ -224,17 +223,11 @@ router.get("/verify/:token", async (ctx, next) => {
     await redis.redisCli.quit();
 
     const rsp = await UserInfoRpc.register(JSON.parse(data));
-
-    if (rsp.code === 0) {
-      ctx.response.redirect("http://localhost:5173/success");
-    } else {
-      ctx.response.redirect("http://localhost:5173/failure");
-    }
   } catch (error) {
-    ctx.response.redirect("http://localhost:5173");
+    console.error(error);
   }
 
-  // return next();
+  return next();
 });
 
 router.post("/reset/:token", async (ctx, next) => {
